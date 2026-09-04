@@ -15,24 +15,17 @@
 
 ## Quick start
 
-```bash
-cp .env.example .env
-# fill in MONGO_PASSWORD and JWT_SECRET (both are required, compose refuses to start without them)
+First run, updates, backup/restore, and troubleshooting live in [RUNBOOK.md](RUNBOOK.md). The short version:
 
-docker compose up -d --build       # production stack
-# -> http://localhost:8080
+```bash
+cp .env.example .env               # then set MONGO_PASSWORD and JWT_SECRET (hex, see RUNBOOK.md)
+docker compose up -d --build       # production stack -> http://<host>:8080
 ```
 
 ```bash
 docker compose -f docker-compose.dev.yml up --build    # development stack
 # -> http://localhost:5173  (Vite HMR)  |  API on :5000  |  Mongo on :27017
-```
-
-Generate secrets:
-
-```bash
-openssl rand -base64 24    # MONGO_PASSWORD
-openssl rand -hex 32       # JWT_SECRET
+# dev ports are bound to 127.0.0.1 only - not reachable from other machines
 ```
 
 ---
@@ -62,16 +55,7 @@ Compose *appends* list fields (`ports`) when merging override files, which would
 
 ## Common operations
 
-| Task | Command |
-|---|---|
-| Logs | `docker compose logs -f server` |
-| Rebuild one service | `docker compose up -d --build server` |
-| Mongo shell | `docker compose exec mongo mongosh -u spt -p --authenticationDatabase admin` |
-| Backup DB | `docker compose exec -T mongo mongodump --archive -u spt -p "$MONGO_PASSWORD" --authenticationDatabase admin > backup.archive` |
-| Restore DB | `docker compose exec -T mongo mongorestore --archive -u spt -p "$MONGO_PASSWORD" --authenticationDatabase admin < backup.archive` |
-| Stop, keep data | `docker compose down` |
-| Stop, **delete data** | `docker compose down -v` |
-| Health | `docker compose ps` (shows healthy/unhealthy) |
+See [RUNBOOK.md](RUNBOOK.md) — logs, rebuilds, Mongo shell, backup/restore, stop/remove.
 
 ---
 
