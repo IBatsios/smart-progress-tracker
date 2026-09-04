@@ -18,7 +18,7 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD:-devpassword}
       MONGO_INITDB_DATABASE: ${MONGO_DB:-smart_progress_tracker}
     ports:
-      - "27017:27017"          # so Compass / mongosh on the host can attach
+      - "127.0.0.1:27017:27017"          # so Compass / mongosh on the host can attach
     volumes:
       - mongo-dev-data:/data/db
     healthcheck:
@@ -46,7 +46,7 @@ services:
       - ./server:/app             # live source
       - /app/node_modules         # keep the image's deps, don't shadow them
     ports:
-      - "5000:5000"
+      - "127.0.0.1:5000:5000"
     depends_on:
       mongo:
         condition: service_healthy
@@ -67,7 +67,7 @@ services:
       - ./client:/app
       - /app/node_modules
     ports:
-      - "5173:5173"
+      - "127.0.0.1:5173:5173"
     depends_on:
       - server
     networks: [spt]

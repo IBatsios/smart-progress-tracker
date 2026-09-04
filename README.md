@@ -1,5 +1,15 @@
 # 🚀 Smart Progress Tracker (Career OS)
 
+> **Fork notice** — the application is the work of
+> [Tanisha Maurya](https://github.com/tanish-sd26/Smart_Progress_Tracker), MIT licensed.
+> This fork adds a full Docker deployment: multi-stage builds for the client and
+> server, an nginx-served production image, and prod/dev Compose stacks with a
+> bundled MongoDB — see [DOCKER.md](DOCKER.md).
+>
+> The only application-code change is `client/vite.config.js`, which makes the
+> dev-server proxy target configurable via `VITE_PROXY_TARGET` and enables
+> polling-based file watching for bind mounts.
+
 ## Measure Real Learning Progress, Not Just Activity
 
 A full-stack SaaS-style web application that tracks daily tasks and learning behavior to evaluate **actual skill growth, consistency, and job readiness** using a weighted scoring system.
