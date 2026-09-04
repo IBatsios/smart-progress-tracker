@@ -1,0 +1,413 @@
+
+/* ============================================ */
+/* PAGE TRANSITIONS                             */
+/* ============================================ */
+.page-enter {
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+.page-enter-active {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 400ms ease-out, transform 400ms ease-out;
+}
+
+.page-exit {
+    opacity: 1;
+}
+
+.page-exit-active {
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 300ms ease-in, transform 300ms ease-in;
+}
+
+/* ============================================ */
+/* CARD HOVER EFFECTS                           */
+/* ============================================ */
+.card-hover-lift {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-hover-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3),
+                0 0 0 1px rgba(99, 102, 241, 0.1);
+}
+
+/* ============================================ */
+/* GLASSMORPHISM EFFECT                         */
+/* ============================================ */
+.glass-card {
+    background: rgba(17, 34, 64, 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(35, 53, 84, 0.5);
+    border-radius: 16px;
+}
+
+/* ============================================ */
+/* GRADIENT BACKGROUNDS                         */
+/* ============================================ */
+.gradient-bg-primary {
+    background: linear-gradient(135deg, 
+        rgba(99, 102, 241, 0.1) 0%, 
+        rgba(139, 92, 246, 0.05) 50%,
+        rgba(6, 182, 212, 0.05) 100%
+    );
+}
+
+.gradient-bg-success {
+    background: linear-gradient(135deg,
+        rgba(34, 197, 94, 0.1) 0%,
+        rgba(20, 184, 166, 0.05) 100%
+    );
+}
+
+.gradient-bg-warning {
+    background: linear-gradient(135deg,
+        rgba(234, 179, 8, 0.1) 0%,
+        rgba(249, 115, 22, 0.05) 100%
+    );
+}
+
+.gradient-bg-danger {
+    background: linear-gradient(135deg,
+        rgba(239, 68, 68, 0.1) 0%,
+        rgba(236, 72, 153, 0.05) 100%
+    );
+}
+
+/* ============================================ */
+/* ANIMATED GRADIENT TEXT                        */
+/* ============================================ */
+.animated-gradient-text {
+    background: linear-gradient(
+        270deg,
+        #6366f1,
+        #57cbff,
+        #64ffda,
+        #a78bfa,
+        #6366f1
+    );
+    background-size: 400% 400%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradientShift 8s ease infinite;
+}
+
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* ============================================ */
+/* PROGRESS BAR ANIMATIONS                      */
+/* ============================================ */
+.progress-bar-animate {
+    animation: progressFill 1.5s ease-out forwards;
+}
+
+@keyframes progressFill {
+    from {
+        width: 0%;
+        opacity: 0.5;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Shimmer effect on progress bar */
+.progress-shimmer {
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-shimmer::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.1),
+        transparent
+    );
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+/* ============================================ */
+/* CIRCULAR PROGRESS ANIMATION                  */
+/* ============================================ */
+.circular-progress {
+    animation: circularFill 1.5s ease-out forwards;
+}
+
+@keyframes circularFill {
+    from {
+        stroke-dashoffset: var(--circumference);
+    }
+}
+
+/* ============================================ */
+/* PULSE GLOW ANIMATIONS                        */
+/* ============================================ */
+.glow-green {
+    animation: glowGreen 2s ease-in-out infinite;
+}
+
+@keyframes glowGreen {
+    0%, 100% {
+        box-shadow: 0 0 5px rgba(34, 197, 94, 0.2);
+    }
+    50% {
+        box-shadow: 0 0 20px rgba(34, 197, 94, 0.4),
+                    0 0 40px rgba(34, 197, 94, 0.1);
+    }
+}
+
+.glow-primary {
+    animation: glowPrimary 2s ease-in-out infinite;
+}
+
+@keyframes glowPrimary {
+    0%, 100% {
+        box-shadow: 0 0 5px rgba(99, 102, 241, 0.2);
+    }
+    50% {
+        box-shadow: 0 0 20px rgba(99, 102, 241, 0.4),
+                    0 0 40px rgba(99, 102, 241, 0.1);
+    }
+}
+
+.glow-orange {
+    animation: glowOrange 2s ease-in-out infinite;
+}
+
+@keyframes glowOrange {
+    0%, 100% {
+        box-shadow: 0 0 5px rgba(249, 115, 22, 0.2);
+    }
+    50% {
+        box-shadow: 0 0 20px rgba(249, 115, 22, 0.4);
+    }
+}
+
+/* ============================================ */
+/* STAGGER ANIMATION FOR LISTS                  */
+/* ============================================ */
+.stagger-item {
+    opacity: 0;
+    transform: translateY(15px);
+    animation: staggerIn 0.4s ease-out forwards;
+}
+
+.stagger-item:nth-child(1) { animation-delay: 0.05s; }
+.stagger-item:nth-child(2) { animation-delay: 0.1s; }
+.stagger-item:nth-child(3) { animation-delay: 0.15s; }
+.stagger-item:nth-child(4) { animation-delay: 0.2s; }
+.stagger-item:nth-child(5) { animation-delay: 0.25s; }
+.stagger-item:nth-child(6) { animation-delay: 0.3s; }
+.stagger-item:nth-child(7) { animation-delay: 0.35s; }
+.stagger-item:nth-child(8) { animation-delay: 0.4s; }
+.stagger-item:nth-child(9) { animation-delay: 0.45s; }
+.stagger-item:nth-child(10) { animation-delay: 0.5s; }
+
+@keyframes staggerIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============================================ */
+/* TOOLTIP STYLES                               */
+/* ============================================ */
+.custom-tooltip {
+    background: #112240 !important;
+    border: 1px solid #233554 !important;
+    border-radius: 8px !important;
+    padding: 10px 14px !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4) !important;
+}
+
+.custom-tooltip .label {
+    color: #ccd6f6;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+/* ============================================ */
+/* HEATMAP CELL HOVER                           */
+/* ============================================ */
+.heatmap-cell {
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.heatmap-cell:hover {
+    transform: scale(1.3);
+    outline: 2px solid rgba(99, 102, 241, 0.5);
+    outline-offset: 1px;
+    z-index: 10;
+}
+
+/* ============================================ */
+/* SKELETON LOADING                             */
+/* ============================================ */
+.skeleton {
+    background: linear-gradient(
+        90deg,
+        #112240 25%,
+        #1a3358 50%,
+        #112240 75%
+    );
+    background-size: 200% 100%;
+    animation: skeletonPulse 1.5s ease-in-out infinite;
+    border-radius: 8px;
+}
+
+@keyframes skeletonPulse {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* ============================================ */
+/* NUMBER COUNTER ANIMATION                     */
+/* ============================================ */
+.counter-animate {
+    animation: counterPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes counterPop {
+    0% {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* ============================================ */
+/* SCROLLBAR FOR SIDEBAR                        */
+/* ============================================ */
+.sidebar-scroll::-webkit-scrollbar {
+    width: 4px;
+}
+
+.sidebar-scroll::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.sidebar-scroll::-webkit-scrollbar-thumb {
+    background: #233554;
+    border-radius: 2px;
+}
+
+/* ============================================ */
+/* FORM INPUT FOCUS EFFECTS                     */
+/* ============================================ */
+.input-glow:focus {
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15),
+                0 0 15px rgba(99, 102, 241, 0.1);
+}
+
+/* ============================================ */
+/* BADGE PULSE (for notifications)              */
+/* ============================================ */
+.badge-pulse {
+    position: relative;
+}
+
+.badge-pulse::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    width: 8px;
+    height: 8px;
+    background: #ef4444;
+    border-radius: 50%;
+    animation: badgePulse 1.5s infinite;
+}
+
+@keyframes badgePulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.5);
+        opacity: 0.5;
+    }
+}
+
+/* ============================================ */
+/* RESPONSIVE OVERRIDES                         */
+/* ============================================ */
+@media (max-width: 768px) {
+    .card-hover-lift:hover {
+        transform: none;
+    }
+
+    .heatmap-cell:hover {
+        transform: scale(1.1);
+    }
+}
+
+/* ============================================ */
+/* CHART RESPONSIVE CONTAINER                   */
+/* ============================================ */
+.chart-container {
+    width: 100%;
+    min-height: 200px;
+    position: relative;
+}
+
+/* ============================================ */
+/* RECHARTS OVERRIDES                           */
+/* ============================================ */
+.recharts-cartesian-grid-horizontal line,
+.recharts-cartesian-grid-vertical line {
+    stroke: #233554 !important;
+}
+
+.recharts-tooltip-wrapper {
+    z-index: 50 !important;
+}
+
+.recharts-legend-item-text {
+    color: #8892b0 !important;
+    font-size: 12px !important;
+}
+
+/* ============================================ */
+/* PRINT STYLES                                 */
+/* ============================================ */
+@media print {
+    body {
+        background: white;
+        color: black;
+    }
+
+    .no-print {
+        display: none !important;
+    }
+}

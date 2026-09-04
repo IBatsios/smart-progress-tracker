@@ -1,0 +1,80 @@
+# ============================================
+# Smart Progress Tracker - DEVELOPMENT stack
+#   docker compose -f docker-compose.dev.yml up --build
+#   -> http://localhost:5173  (Vite HMR, source bind-mounted)
+#
+# Standalone file, not an override: compose list-merge rules
+# (ports, args) make a partial override more confusing than helpful.
+# ============================================
+name: smart-progress-tracker-dev
+
+services:
+  mongo:
+    image: mongo:7
+    container_name: spt-dev-mongo
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER:-spt}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD:-devpassword}
+      MONGO_INITDB_DATABASE: ${MONGO_DB:-smart_progress_tracker}
+    ports:
+      - "27017:27017"          # so Compass / mongosh on the host can attach
+    volumes:
+      - mongo-dev-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    networks: [spt]
+
+  server:
+    build:
+      context: ./server
+      target: dev
+    container_name: spt-dev-server
+    restart: unless-stopped
+    environment:
+      NODE_ENV: development
+      PORT: 5000
+      MONGODB_URI: mongodb://${MONGO_USER:-spt}:${MONGO_PASSWORD:-devpassword}@mongo:27017/${MONGO_DB:-smart_progress_tracker}?authSource=admin
+      JWT_SECRET: ${JWT_SECRET:-dev-only-not-a-real-secret}
+      JWT_EXPIRE: ${JWT_EXPIRE:-7d}
+      CLIENT_URL: http://localhost:5173
+    volumes:
+      - ./server:/app             # live source
+      - /app/node_modules         # keep the image's deps, don't shadow them
+    ports:
+      - "5000:5000"
+    depends_on:
+      mongo:
+        condition: service_healthy
+    networks: [spt]
+
+  client:
+    build:
+      context: ./client
+      target: dev
+    container_name: spt-dev-client
+    restart: unless-stopped
+    environment:
+      # Vite's dev proxy target (see vite.config.js) - inside the network
+      # the API is "server", not "localhost".
+      VITE_PROXY_TARGET: http://server:5000
+      CHOKIDAR_USEPOLLING: "true"   # file watching over a Windows bind mount
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+    ports:
+      - "5173:5173"
+    depends_on:
+      - server
+    networks: [spt]
+
+volumes:
+  mongo-dev-data:
+
+networks:
+  spt:
+    driver: bridge

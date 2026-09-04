@@ -1,0 +1,70 @@
+# ============================================
+# Smart Progress Tracker - PRODUCTION stack
+#   docker compose up -d --build
+#   -> http://localhost:${WEB_PORT:-8080}
+# ============================================
+name: smart-progress-tracker
+
+services:
+  mongo:
+    image: mongo:7
+    container_name: spt-mongo
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER:-spt}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD:?set MONGO_PASSWORD in .env}
+      MONGO_INITDB_DATABASE: ${MONGO_DB:-smart_progress_tracker}
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    networks: [spt]
+
+  server:
+    build:
+      context: ./server
+      target: runtime
+    image: spt-server:latest
+    container_name: spt-server
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 5000
+      MONGODB_URI: ${MONGODB_URI:-mongodb://${MONGO_USER:-spt}:${MONGO_PASSWORD}@mongo:27017/${MONGO_DB:-smart_progress_tracker}?authSource=admin}
+      JWT_SECRET: ${JWT_SECRET:?set JWT_SECRET in .env}
+      JWT_EXPIRE: ${JWT_EXPIRE:-7d}
+      CLIENT_URL: ${CLIENT_URL:-http://localhost:8080}
+    depends_on:
+      mongo:
+        condition: service_healthy
+    networks: [spt]
+    # No published port: the API is only reachable through nginx.
+    # Uncomment to hit it directly for debugging.
+    # ports: ["5000:5000"]
+
+  client:
+    build:
+      context: ./client
+      target: runtime
+      args:
+        VITE_API_URL: ""
+    image: spt-client:latest
+    container_name: spt-client
+    restart: unless-stopped
+    ports:
+      - "${WEB_PORT:-8080}:80"
+    depends_on:
+      server:
+        condition: service_healthy
+    networks: [spt]
+
+volumes:
+  mongo-data:
+
+networks:
+  spt:
+    driver: bridge
